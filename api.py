@@ -93,9 +93,10 @@ def wikipedia_id_to_url(wiki_id: str):
 
     return f"https://en.wikipedia.org/wiki/{'_'.join(wiki_id.split(' '))}"
 
-def create_response_from_predictions_and_scores(predictions: List[list], scores: List[np.ndarray]) -> List[List[tuple]]:
-    response = []
+def create_response_from_predictions_and_scores(items: ItemList, predictions: List[list], scores: List[np.ndarray]) -> List[List[tuple]]:
+    response = {}
     softmax = torch.nn.Softmax(dim=0)
+    uids = [str(i.uid) for i in items.items]
 
     for i in range(len(predictions)):
         item_preds = predictions[i]
@@ -107,7 +108,7 @@ def create_response_from_predictions_and_scores(predictions: List[list], scores:
             item_scores = item_scores.tolist()
     
         item_preds_and_scores = [(item_preds[idx], wikipedia_id_to_url(item_preds[idx]), item_scores[idx]) for idx in range(len(item_preds))]
-        response.append(item_preds_and_scores)
+        response.update({uids[i]: item_preds_and_scores})
 
     return response
 
@@ -119,7 +120,7 @@ async def blink(items: ItemList):
     models = global_vars['models']
     _, _, _, _, _, predictions, scores, = main_dense.run(global_vars['args'], None, *models, test_data=processed_items)
 
-    return create_response_from_predictions_and_scores(predictions, scores)
+    return create_response_from_predictions_and_scores(items, predictions, scores)
 
 @app.get("/blink/single")
 async def blink(item: Item):
