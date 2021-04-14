@@ -12,14 +12,14 @@ import argparse
 from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
-from typing import List
+from typing import List, Union
 import numpy as np
 import requests
 
 app = FastAPI()
 
 class Item(BaseModel):
-    uid: int
+    uid: Union[int, str]
     text: str
 
 class ItemList(BaseModel):
@@ -48,10 +48,10 @@ async def startup():
         "output_path": "logs/" # logging directory
     }
 
-    global_vars['args'] = [argparse.Namespace(**config)]
+    global_vars['args'] = argparse.Namespace(**config)
 
     print("Loading models...")
-    global_vars['models'] = [main_dense.load_models(global_vars['args'][0], logger=None)]
+    global_vars['models'] = main_dense.load_models(global_vars['args'], logger=None)
 
 def convert_item_to_blink_input(item: Item) -> dict:
     return {
@@ -109,8 +109,8 @@ async def blink(items: ItemList):
     processed_items = convert_items_to_blink_inputs(items.items)
 
     print(f"Making {len(processed_items)} predictions...")
-    models = global_vars['models'][0]
-    _, _, _, _, _, predictions, scores, = main_dense.run(global_vars['args'][0], None, *models, test_data=processed_items)
+    models = global_vars['models']
+    _, _, _, _, _, predictions, scores, = main_dense.run(global_vars['args'], None, *models, test_data=processed_items)
 
     return create_response_from_predictions_and_scores(predictions, scores)
 
@@ -119,8 +119,8 @@ async def blink(item: Item):
     processed_item = convert_item_to_blink_input(item)
 
     # print(f"Making {len(processed_items)} predictions...")
-    models = global_vars['models'][0]
-    _, _, _, _, _, predictions, scores = main_dense.run(global_vars['args'][0], None, *models, test_data=[processed_item])
+    models = global_vars['models']
+    _, _, _, _, _, predictions, scores = main_dense.run(global_vars['args'], None, *models, test_data=[processed_item])
 
     return create_response_from_predictions_and_scores(predictions, scores)
 
