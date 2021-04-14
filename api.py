@@ -113,6 +113,7 @@ def create_response_from_predictions_and_scores(items: ItemList, predictions: Li
     return response
 
 @app.get("/blink/multiple")
+@app.post("/blink/multiple")
 async def blink(items: ItemList):
     processed_items = convert_items_to_blink_inputs(items.items)
 
@@ -121,7 +122,7 @@ async def blink(items: ItemList):
     _, _, _, _, _, predictions, scores, = main_dense.run(global_vars['args'], None, *models, test_data=processed_items)
 
     return create_response_from_predictions_and_scores(items, predictions, scores)
-    
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
