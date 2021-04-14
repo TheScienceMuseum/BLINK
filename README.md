@@ -1,3 +1,20 @@
+## Heritage Connector/API instructions
+
+Make a virtualenv
+
+```console
+# install dependencies
+pip install -r requirements.txt
+
+# download models
+chmod +x download_blink_models.sh
+./download_blink_models.sh
+
+# start API server
+python app.py
+```
+
+--------------------------------------------------------------------------------
 ![BLINK logo](./img/blink_logo_banner.png)
 --------------------------------------------------------------------------------
 
