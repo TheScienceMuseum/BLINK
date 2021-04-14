@@ -1,6 +1,8 @@
-## Heritage Connector/API instructions
+## Heritage Connector Instructions
 
-Make a virtualenv
+### Setup
+
+First, make a virtualenv
 
 ```console
 # install dependencies
@@ -13,6 +15,135 @@ chmod +x download_blink_models.sh
 # start API server
 python app.py
 ```
+
+### Using the REST API
+Requests can be made using GET or POST. The endpoint is `<base-url>:8000/blink/multiple`.
+
+**<details><summary>Example request:</summary>**
+Each `text` item is the source text, with [[double square brackets]] around the entity. BLINK doesn't need predicted entity labels.
+
+```json
+{
+    "items": [
+        {"uid": 0, "text": "Photographs of watercolours belonging to the [[Earl of Elgin]], of the Elgin Railway (i) plate rails and transverse stone sleepers (ii) switch File of photographs belonging to Dendy Marshall marked BRIT [British] RAILWAYS  17th and 18th Century Stockton and Darlington Sundries"},
+        {"uid": 1, "text": "PA Reuter photograph titled 'Claire joins Sir Laurence in Richard III'. Caption on back reads: That 23 year old lady of beauty and talent, Claire Bloom, has her first Shakespearean screen role opposite Sir Laurence Olivier as the tragic young widow in Richard III. The picture is being made at Stepperton studios, and is a joint venture by London Films and [[Laurence Olivier Productions]]."}
+        ]
+}
+```
+</details>
+
+**<details><summary>Example response:</summary>**
+The keys of the response respond to the `uid` values provided in the request.
+
+``` json
+{
+    "0": [
+        [
+            "Earl of Elgin",
+            "https://en.wikipedia.org/wiki/Earl_of_Elgin",
+            0.9999476671218872
+        ],
+        [
+            "James Bruce, 8th Earl of Elgin",
+            "https://en.wikipedia.org/wiki/James_Bruce,_8th_Earl_of_Elgin",
+            2.3686166969127953e-05
+        ],
+        [
+            "Victor Bruce, 9th Earl of Elgin",
+            "https://en.wikipedia.org/wiki/Victor_Bruce,_9th_Earl_of_Elgin",
+            2.092596514557954e-05
+        ],
+        [
+            "Thomas Bruce, 7th Earl of Elgin",
+            "https://en.wikipedia.org/wiki/Thomas_Bruce,_7th_Earl_of_Elgin",
+            4.30714226240525e-06
+        ],
+        [
+            "Andrew Bruce, 11th Earl of Elgin",
+            "https://en.wikipedia.org/wiki/Andrew_Bruce,_11th_Earl_of_Elgin",
+            1.405583020641643e-06
+        ],
+        [
+            "Thomas Bruce, 1st Earl of Elgin",
+            "https://en.wikipedia.org/wiki/Thomas_Bruce,_1st_Earl_of_Elgin",
+            1.0031710644398117e-06
+        ],
+        [
+            "Charles Bruce, 5th Earl of Elgin",
+            "https://en.wikipedia.org/wiki/Charles_Bruce,_5th_Earl_of_Elgin",
+            5.862896159669617e-07
+        ],
+        [
+            "Robert Bruce, 1st Earl of Ailesbury",
+            "https://en.wikipedia.org/wiki/Robert_Bruce,_1st_Earl_of_Ailesbury",
+            2.534624456984602e-07
+        ],
+        [
+            "Thomas Bruce, 2nd Earl of Ailesbury",
+            "https://en.wikipedia.org/wiki/Thomas_Bruce,_2nd_Earl_of_Ailesbury",
+            1.2343045341367542e-07
+        ],
+        [
+            "John Scott, 1st Earl of Eldon",
+            "https://en.wikipedia.org/wiki/John_Scott,_1st_Earl_of_Eldon",
+            2.3001267557276606e-09
+        ]
+    ],
+    "1": [
+        [
+            "Laurence Olivier Productions",
+            "https://en.wikipedia.org/wiki/Laurence_Olivier_Productions",
+            0.9999980926513672
+        ],
+        [
+            "Laurence Olivier",
+            "https://en.wikipedia.org/wiki/Laurence_Olivier",
+            1.9481931303744204e-06
+        ],
+        [
+            "Laurence Olivier on stage and screen",
+            "https://en.wikipedia.org/wiki/Laurence_Olivier_on_stage_and_screen",
+            1.6314469775124962e-08
+        ],
+        [
+            "Laurence Olivier Presents",
+            "https://en.wikipedia.org/wiki/Laurence_Olivier_Presents",
+            2.1053250254254863e-09
+        ],
+        [
+            "BBC Films",
+            "https://en.wikipedia.org/wiki/BBC_Films",
+            2.1027084518010497e-09
+        ],
+        [
+            "Eon Productions",
+            "https://en.wikipedia.org/wiki/Eon_Productions",
+            2.0073180895252563e-09
+        ],
+        [
+            "ITV Studios",
+            "https://en.wikipedia.org/wiki/ITV_Studios",
+            1.902463520053743e-09
+        ],
+        [
+            "Zenith Productions",
+            "https://en.wikipedia.org/wiki/Zenith_Productions",
+            3.339396814627804e-10
+        ],
+        [
+            "Phoenix Film & Television Productions",
+            "https://en.wikipedia.org/wiki/Phoenix_Film_&_Television_Productions",
+            3.073522825136621e-10
+        ],
+        [
+            "Viacom Productions",
+            "https://en.wikipedia.org/wiki/Viacom_Productions",
+            2.4310875534894194e-10
+        ]
+    ]
+}
+```
+</details>
 
 --------------------------------------------------------------------------------
 ![BLINK logo](./img/blink_logo_banner.png)
