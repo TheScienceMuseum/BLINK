@@ -121,17 +121,7 @@ async def blink(items: ItemList):
     _, _, _, _, _, predictions, scores, = main_dense.run(global_vars['args'], None, *models, test_data=processed_items)
 
     return create_response_from_predictions_and_scores(items, predictions, scores)
-
-@app.get("/blink/single")
-async def blink(item: Item):
-    processed_item = convert_item_to_blink_input(item)
-
-    # print(f"Making {len(processed_items)} predictions...")
-    models = global_vars['models']
-    _, _, _, _, _, predictions, scores = main_dense.run(global_vars['args'], None, *models, test_data=[processed_item])
-
-    return create_response_from_predictions_and_scores(predictions, scores)
-
+    
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
