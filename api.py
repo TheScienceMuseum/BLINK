@@ -7,6 +7,7 @@ to run: `python api.py`
 # blink
 import blink.main_dense as main_dense
 import argparse
+import torch
 
 # fastapi
 from fastapi import FastAPI
@@ -44,7 +45,7 @@ async def startup():
         "entity_encoding": models_path+"all_entities_large.t7",
         "crossencoder_model": models_path+"crossencoder_wiki_large.bin",
         "crossencoder_config": models_path+"crossencoder_wiki_large.json",
-        "fast": True, # set this to be true if speed is a concern
+        "fast": False, # set this to be true if speed is a concern
         "output_path": "logs/" # logging directory
     }
 
@@ -94,12 +95,18 @@ def wikipedia_id_to_url(wiki_id: str):
 
 def create_response_from_predictions_and_scores(predictions: List[list], scores: List[np.ndarray]) -> List[List[tuple]]:
     response = []
+    softmax = torch.nn.Softmax(dim=0)
 
     for i in range(len(predictions)):
         item_preds = predictions[i]
         item_scores = scores[i]
+
+        if global_vars['args'].fast is False:
+            item_scores = softmax(torch.FloatTensor(item_scores)).tolist()
+        else:
+            item_scores = item_scores.tolist()
     
-        item_preds_and_scores = [(item_preds[idx], wikipedia_id_to_url(item_preds[idx]), item_scores[idx].tolist()) for idx in range(len(item_preds))]
+        item_preds_and_scores = [(item_preds[idx], wikipedia_id_to_url(item_preds[idx]), item_scores[idx]) for idx in range(len(item_preds))]
         response.append(item_preds_and_scores)
 
     return response
