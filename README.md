@@ -25,9 +25,23 @@ Each `text` item is the source text, with [[double square brackets]] around the 
 ```json
 {
     "items": [
-        {"uid": 0, "text": "Photographs of watercolours belonging to the [[Earl of Elgin]], of the Elgin Railway (i) plate rails and transverse stone sleepers (ii) switch File of photographs belonging to Dendy Marshall marked BRIT [British] RAILWAYS  17th and 18th Century Stockton and Darlington Sundries"},
-        {"uid": 1, "text": "PA Reuter photograph titled 'Claire joins Sir Laurence in Richard III'. Caption on back reads: That 23 year old lady of beauty and talent, Claire Bloom, has her first Shakespearean screen role opposite Sir Laurence Olivier as the tragic young widow in Richard III. The picture is being made at Stepperton studios, and is a joint venture by London Films and [[Laurence Olivier Productions]]."}
-        ]
+                {
+                    "uid": 0, 
+                    "text": "Photographs of watercolours belonging to the [[Earl of Elgin]], of the Elgin Railway (i) plate rails and transverse stone sleepers (ii) switch File of photographs belonging to Dendy Marshall marked BRIT [British] RAILWAYS  17th and 18th Century Stockton and Darlington Sundries",
+                    "metadata": "test_metadata"
+                },
+                {
+                    "uid": "values_are_converted_to_string",
+                    "text": "[[Larry J. Schaaf]], ‘Mayall, John Jabez Edwin (1813–1901)’, Oxford Dictionary of National Biography, Oxford University Press, 2004 [http://www.oxforddnb.com/view/article/52054]; Richards, L.L.& Gill, A.T., ‘The Mayall story’, History of Photography, 9 (1985), 89–107; http://www.spartacus.schoolnet.co.uk/DSmayall.htm \n  \n Born in England, Mayall started his photographic career in America, returning to London in 1847 where he set up a photographic studio. Exhibiting at the Great Exhibition of 1851, be is best known for his photographs of Queen Victoria and the Royal Family.  He became Mayor of Brighton in 1877'}",
+                    "metadata": {
+                        "can": "be",
+                        "any": "format"
+                    }
+                }
+
+                
+        ],
+    "threshold": 0.8 // optional
 }
 ```
 </details>
@@ -37,110 +51,146 @@ The keys of the response respond to the `uid` values provided in the request.
 
 ``` json
 {
-    "0": [
-        [
-            "Earl of Elgin",
-            "https://en.wikipedia.org/wiki/Earl_of_Elgin",
-            0.9999476671218872
-        ],
-        [
-            "James Bruce, 8th Earl of Elgin",
-            "https://en.wikipedia.org/wiki/James_Bruce,_8th_Earl_of_Elgin",
-            2.3686166969127953e-05
-        ],
-        [
-            "Victor Bruce, 9th Earl of Elgin",
-            "https://en.wikipedia.org/wiki/Victor_Bruce,_9th_Earl_of_Elgin",
-            2.092596514557954e-05
-        ],
-        [
-            "Thomas Bruce, 7th Earl of Elgin",
-            "https://en.wikipedia.org/wiki/Thomas_Bruce,_7th_Earl_of_Elgin",
-            4.30714226240525e-06
-        ],
-        [
-            "Andrew Bruce, 11th Earl of Elgin",
-            "https://en.wikipedia.org/wiki/Andrew_Bruce,_11th_Earl_of_Elgin",
-            1.405583020641643e-06
-        ],
-        [
-            "Thomas Bruce, 1st Earl of Elgin",
-            "https://en.wikipedia.org/wiki/Thomas_Bruce,_1st_Earl_of_Elgin",
-            1.0031710644398117e-06
-        ],
-        [
-            "Charles Bruce, 5th Earl of Elgin",
-            "https://en.wikipedia.org/wiki/Charles_Bruce,_5th_Earl_of_Elgin",
-            5.862896159669617e-07
-        ],
-        [
-            "Robert Bruce, 1st Earl of Ailesbury",
-            "https://en.wikipedia.org/wiki/Robert_Bruce,_1st_Earl_of_Ailesbury",
-            2.534624456984602e-07
-        ],
-        [
-            "Thomas Bruce, 2nd Earl of Ailesbury",
-            "https://en.wikipedia.org/wiki/Thomas_Bruce,_2nd_Earl_of_Ailesbury",
-            1.2343045341367542e-07
-        ],
-        [
-            "John Scott, 1st Earl of Eldon",
-            "https://en.wikipedia.org/wiki/John_Scott,_1st_Earl_of_Eldon",
-            2.3001267557276606e-09
-        ]
+    "items": [
+        {
+            "uid": "0",
+            "metadata": "test_metadata",
+            "text": "Photographs of watercolours belonging to the [[Earl of Elgin]], of the Elgin Railway (i) plate rails and transverse stone sleepers (ii) switch File of photographs belonging to Dendy Marshall marked BRIT [British] RAILWAYS  17th and 18th Century Stockton and Darlington Sundries",
+            "links": [
+                {
+                    "title": "Earl of Elgin",
+                    "url": "https://en.wikipedia.org/wiki/Earl_of_Elgin",
+                    "score": 0.9999476671218872,
+                    "qid": null
+                },
+                {
+                    "title": "James Bruce, 8th Earl of Elgin",
+                    "url": "https://en.wikipedia.org/wiki/James_Bruce,_8th_Earl_of_Elgin",
+                    "score": 2.3686166969127953e-05,
+                    "qid": null
+                },
+                {
+                    "title": "Victor Bruce, 9th Earl of Elgin",
+                    "url": "https://en.wikipedia.org/wiki/Victor_Bruce,_9th_Earl_of_Elgin",
+                    "score": 2.092596514557954e-05,
+                    "qid": null
+                },
+                {
+                    "title": "Thomas Bruce, 7th Earl of Elgin",
+                    "url": "https://en.wikipedia.org/wiki/Thomas_Bruce,_7th_Earl_of_Elgin",
+                    "score": 4.30714226240525e-06,
+                    "qid": null
+                },
+                {
+                    "title": "Andrew Bruce, 11th Earl of Elgin",
+                    "url": "https://en.wikipedia.org/wiki/Andrew_Bruce,_11th_Earl_of_Elgin",
+                    "score": 1.405583020641643e-06,
+                    "qid": null
+                },
+                {
+                    "title": "Thomas Bruce, 1st Earl of Elgin",
+                    "url": "https://en.wikipedia.org/wiki/Thomas_Bruce,_1st_Earl_of_Elgin",
+                    "score": 1.0031710644398117e-06,
+                    "qid": null
+                },
+                {
+                    "title": "Charles Bruce, 5th Earl of Elgin",
+                    "url": "https://en.wikipedia.org/wiki/Charles_Bruce,_5th_Earl_of_Elgin",
+                    "score": 5.862896159669617e-07,
+                    "qid": null
+                },
+                {
+                    "title": "Robert Bruce, 1st Earl of Ailesbury",
+                    "url": "https://en.wikipedia.org/wiki/Robert_Bruce,_1st_Earl_of_Ailesbury",
+                    "score": 2.534624456984602e-07,
+                    "qid": null
+                },
+                {
+                    "title": "Thomas Bruce, 2nd Earl of Ailesbury",
+                    "url": "https://en.wikipedia.org/wiki/Thomas_Bruce,_2nd_Earl_of_Ailesbury",
+                    "score": 1.2343045341367542e-07,
+                    "qid": null
+                },
+                {
+                    "title": "John Scott, 1st Earl of Eldon",
+                    "url": "https://en.wikipedia.org/wiki/John_Scott,_1st_Earl_of_Eldon",
+                    "score": 2.3001267557276606e-09,
+                    "qid": null
+                }
+            ]
+        },
+        {
+            "uid": "values_are_converted_to_string",
+            "metadata": {
+                        "can": "be",
+                        "any": "format"
+                    },
+            "text": "[[Larry J. Schaaf]], ‘Mayall, John Jabez Edwin (1813–1901)’, Oxford Dictionary of National Biography, Oxford University Press, 2004 [http://www.oxforddnb.com/view/article/52054]; Richards, L.L.& Gill, A.T., ‘The Mayall story’, History of Photography, 9 (1985), 89–107; http://www.spartacus.schoolnet.co.uk/DSmayall.htm \n  \n Born in England, Mayall started his photographic career in America, returning to London in 1847 where he set up a photographic studio. Exhibiting at the Great Exhibition of 1851, be is best known for his photographs of Queen Victoria and the Royal Family.  He became Mayor of Brighton in 1877'}",
+            "links": [
+                {
+                    "title": "Jim Schaaf",
+                    "url": "https://en.wikipedia.org/wiki/Jim_Schaaf",
+                    "score": 0.18495890498161316,
+                    "qid": null
+                },
+                {
+                    "title": "Joe Schaaf",
+                    "url": "https://en.wikipedia.org/wiki/Joe_Schaaf",
+                    "score": 0.13790211081504822,
+                    "qid": null
+                },
+                {
+                    "title": "Larry Schweikart",
+                    "url": "https://en.wikipedia.org/wiki/Larry_Schweikart",
+                    "score": 0.1316574066877365,
+                    "qid": null
+                },
+                {
+                    "title": "Johannes Schlaf",
+                    "url": "https://en.wikipedia.org/wiki/Johannes_Schlaf",
+                    "score": 0.11536765098571777,
+                    "qid": null
+                },
+                {
+                    "title": "Franklin J. Schaffner",
+                    "url": "https://en.wikipedia.org/wiki/Franklin_J._Schaffner",
+                    "score": 0.09967199712991714,
+                    "qid": null
+                },
+                {
+                    "title": "Daniel Pfeiffer",
+                    "url": "https://en.wikipedia.org/wiki/Daniel_Pfeiffer",
+                    "score": 0.0885220319032669,
+                    "qid": null
+                },
+                {
+                    "title": "James L. Kauffman",
+                    "url": "https://en.wikipedia.org/wiki/James_L._Kauffman",
+                    "score": 0.08521154522895813,
+                    "qid": null
+                },
+                {
+                    "title": "Bibliography of John Quincy Adams",
+                    "url": "https://en.wikipedia.org/wiki/Bibliography_of_John_Quincy_Adams",
+                    "score": 0.08375049382448196,
+                    "qid": null
+                },
+                {
+                    "title": "Frank J. Schlueter",
+                    "url": "https://en.wikipedia.org/wiki/Frank_J._Schlueter",
+                    "score": 0.038033004850149155,
+                    "qid": null
+                },
+                {
+                    "title": "Schaaf",
+                    "url": "https://en.wikipedia.org/wiki/Schaaf",
+                    "score": 0.03492482006549835,
+                    "qid": null
+                }
+            ]
+        }
     ],
-    "1": [
-        [
-            "Laurence Olivier Productions",
-            "https://en.wikipedia.org/wiki/Laurence_Olivier_Productions",
-            0.9999980926513672
-        ],
-        [
-            "Laurence Olivier",
-            "https://en.wikipedia.org/wiki/Laurence_Olivier",
-            1.9481931303744204e-06
-        ],
-        [
-            "Laurence Olivier on stage and screen",
-            "https://en.wikipedia.org/wiki/Laurence_Olivier_on_stage_and_screen",
-            1.6314469775124962e-08
-        ],
-        [
-            "Laurence Olivier Presents",
-            "https://en.wikipedia.org/wiki/Laurence_Olivier_Presents",
-            2.1053250254254863e-09
-        ],
-        [
-            "BBC Films",
-            "https://en.wikipedia.org/wiki/BBC_Films",
-            2.1027084518010497e-09
-        ],
-        [
-            "Eon Productions",
-            "https://en.wikipedia.org/wiki/Eon_Productions",
-            2.0073180895252563e-09
-        ],
-        [
-            "ITV Studios",
-            "https://en.wikipedia.org/wiki/ITV_Studios",
-            1.902463520053743e-09
-        ],
-        [
-            "Zenith Productions",
-            "https://en.wikipedia.org/wiki/Zenith_Productions",
-            3.339396814627804e-10
-        ],
-        [
-            "Phoenix Film & Television Productions",
-            "https://en.wikipedia.org/wiki/Phoenix_Film_&_Television_Productions",
-            3.073522825136621e-10
-        ],
-        [
-            "Viacom Productions",
-            "https://en.wikipedia.org/wiki/Viacom_Productions",
-            2.4310875534894194e-10
-        ]
-    ]
+    "threshold": 0.8
 }
 ```
 </details>

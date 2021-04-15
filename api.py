@@ -11,20 +11,33 @@ import torch
 
 # fastapi
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, confloat, HttpUrl
 import uvicorn
-from typing import List, Union
+from typing import List, Union, Optional, Any
 import numpy as np
 import requests
 
 app = FastAPI()
 
+# ------------- DATA MODELS -------------
+
+class WikiLink(BaseModel):
+    title: str
+    url: HttpUrl
+    score: confloat(ge=0, le=1)
+    qid: Optional[str] = None
+
 class Item(BaseModel):
-    uid: Union[int, str]
+    uid: str
+    metadata: Any = None
     text: str
+    links: Optional[List[WikiLink]] = None
 
 class ItemList(BaseModel):
     items: List[Item]
+    threshold: Optional[confloat(ge=0, le=1)] = None
+
+# ---------------------------------------
 
 
 # set global variables: initialised during startup and then used for API calls
@@ -93,35 +106,45 @@ def wikipedia_id_to_url(wiki_id: str):
 
     return f"https://en.wikipedia.org/wiki/{'_'.join(wiki_id.split(' '))}"
 
-def create_response_from_predictions_and_scores(items: ItemList, predictions: List[list], scores: List[np.ndarray]) -> List[List[tuple]]:
-    response = {}
+def create_response_from_itemlist(itemlist: ItemList, predictions: List[list], scores: List[np.ndarray], threshold: Union[float, None]) -> ItemList:
     softmax = torch.nn.Softmax(dim=0)
-    uids = [str(i.uid) for i in items.items]
+    output_items = []
 
-    for i in range(len(predictions)):
-        item_preds = predictions[i]
-        item_scores = scores[i]
+    for idx, item in enumerate(itemlist.items):
+        output_item = {"uid": item.uid, "metadata": item.metadata, "text": item.text}
+
+        item_preds = predictions[idx]
+        item_scores = scores[idx]
 
         if global_vars['args'].fast is False:
             item_scores = softmax(torch.FloatTensor(item_scores)).tolist()
         else:
             item_scores = item_scores.tolist()
-    
-        item_preds_and_scores = [(item_preds[idx], wikipedia_id_to_url(item_preds[idx]), item_scores[idx]) for idx in range(len(item_preds))]
-        response.update({uids[i]: item_preds_and_scores})
 
-    return response
+        item_links = [{"title": item_preds[idx], "url": wikipedia_id_to_url(item_preds[idx]), "score": item_scores[idx]} for idx in range(len(item_preds))]
+        
+        if threshold is not None:
+            item_links = [i for i in item_links if i['score'] >= threshold]
 
-@app.get("/blink/multiple")
-@app.post("/blink/multiple")
-async def blink(items: ItemList):
-    processed_items = convert_items_to_blink_inputs(items.items)
+        output_item['links'] = item_links
+        output_items.append(output_item)
+
+    return {
+        "threshold": threshold,
+        "items": output_items
+    }
+
+@app.get("/blink/multiple", response_model=ItemList)
+@app.post("/blink/multiple", response_model=ItemList)
+async def blink(itemlist: ItemList):
+    processed_items = convert_items_to_blink_inputs(itemlist.items)
+    threshold = itemlist.threshold
 
     print(f"Making {len(processed_items)} predictions...")
     models = global_vars['models']
     _, _, _, _, _, predictions, scores, = main_dense.run(global_vars['args'], None, *models, test_data=processed_items)
 
-    return create_response_from_predictions_and_scores(items, predictions, scores)
+    return create_response_from_itemlist(itemlist, predictions, scores, threshold)
 
 
 if __name__ == "__main__":
