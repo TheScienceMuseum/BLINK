@@ -42,7 +42,7 @@ def get_qid_from_wikipedia_id(wikipedia_id: str) -> str:
     # passing the redirects param through the API gets the details of the page that Wikipedia may redirect to
     endpoint = (
                     "https://en.wikipedia.org/w/api.php?action=query&prop=pageprops&titles="
-                    + wikipedia_id
+                    + urllib.parse.quote(wikipedia_id)
                     + "&format=json&redirects"
                 )
     res = urllib.request.urlopen(endpoint)

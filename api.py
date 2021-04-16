@@ -133,7 +133,7 @@ def create_response_from_itemlist(itemlist: ItemList, predictions: List[list], s
         # we get the QIDs after filtering out link candidates below the threshold to reduce the number of Wikipedia API calls
         if get_qids:
             for link in item_links:
-                link.update({"qid": get_qid_from_wikipedia_id('_'.join(item_preds[idx].split(' ')))})
+                link.update({"qid": get_qid_from_wikipedia_id('_'.join(link["title"].split(' ')))})
 
         output_item['links'] = item_links
         output_items.append(output_item)
