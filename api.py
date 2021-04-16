@@ -28,7 +28,7 @@ class WikiLink(BaseModel):
     qid: Optional[str] = None
 
 class Item(BaseModel):
-    uid: str
+    id: str
     metadata: Any = None
     text: str
     links: Optional[List[WikiLink]] = None
@@ -69,7 +69,7 @@ async def startup():
 
 def convert_item_to_blink_input(item: Item) -> dict:
     return {
-        "id": item.uid,
+        "id": item.id,
         "label": "unknown",
         "label_id": -1,
         "context_left": item.text.split("[[")[0].lower(),
@@ -81,7 +81,7 @@ def convert_items_to_blink_inputs(items: ItemList) -> List[dict]:
     """
     Input:
     [
-        {"uid": 2, "text": ""}, ...
+        {"id": 2, "text": ""}, ...
     ]
 
     Output:
@@ -111,7 +111,7 @@ def create_response_from_itemlist(itemlist: ItemList, predictions: List[list], s
     output_items = []
 
     for idx, item in enumerate(itemlist.items):
-        output_item = {"uid": item.uid, "metadata": item.metadata, "text": item.text}
+        output_item = {"id": item.id, "metadata": item.metadata, "text": item.text}
 
         item_preds = predictions[idx]
         item_scores = scores[idx]
