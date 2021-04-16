@@ -22,7 +22,9 @@ Requests can be made using GET or POST. The endpoint is `<base-url>:8000/blink/m
 **<details><summary>Example request:</summary>**
 Each `text` item is the source text, with [[double square brackets]] around the entity. BLINK doesn't need predicted entity labels.
 
-Note: `id` does not have to be unique. Response items *should* be returned in the same order that they were requested.
+Notes: 
+- `id` does not have to be unique. Response items *should* be returned in the same order that they were requested.
+- parameters `get_qids` (whether to fetch Wikidata QIDs) and `threshold` are optional. They default to `True` (get QIDs) and `0` (no threshold) respectively.
 
 ```json
 {
@@ -43,7 +45,8 @@ Note: `id` does not have to be unique. Response items *should* be returned in th
 
                 
         ],
-    "threshold": 0.8 // optional
+    "threshold": 0.8, // optional, defaults to 0
+    "get_qids": true, // optional, defaults to true
 }
 ```
 </details>

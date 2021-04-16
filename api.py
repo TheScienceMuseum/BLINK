@@ -17,6 +17,9 @@ from typing import List, Union, Optional, Any
 import numpy as np
 import requests
 
+# utils
+from api_utils import get_qid_from_wikipedia_id
+
 app = FastAPI()
 
 # ------------- DATA MODELS -------------
@@ -36,6 +39,7 @@ class Item(BaseModel):
 class ItemList(BaseModel):
     items: List[Item]
     threshold: Optional[confloat(ge=0, le=1)] = None
+    get_qids: Optional[bool] = True
 
 # ---------------------------------------
 
@@ -106,7 +110,7 @@ def wikipedia_id_to_url(wiki_id: str):
 
     return f"https://en.wikipedia.org/wiki/{'_'.join(wiki_id.split(' '))}"
 
-def create_response_from_itemlist(itemlist: ItemList, predictions: List[list], scores: List[np.ndarray], threshold: Union[float, None]) -> ItemList:
+def create_response_from_itemlist(itemlist: ItemList, predictions: List[list], scores: List[np.ndarray], threshold: Union[float, None], get_qids: bool) -> ItemList:
     softmax = torch.nn.Softmax(dim=0)
     output_items = []
 
@@ -126,6 +130,11 @@ def create_response_from_itemlist(itemlist: ItemList, predictions: List[list], s
         if threshold is not None:
             item_links = [i for i in item_links if i['score'] >= threshold]
 
+        # we get the QIDs after filtering out link candidates below the threshold to reduce the number of Wikipedia API calls
+        if get_qids:
+            for link in item_links:
+                link.update({"qid": get_qid_from_wikipedia_id('_'.join(item_preds[idx].split(' ')))})
+
         output_item['links'] = item_links
         output_items.append(output_item)
 
@@ -144,7 +153,7 @@ async def blink(itemlist: ItemList):
     models = global_vars['models']
     _, _, _, _, _, predictions, scores, = main_dense.run(global_vars['args'], None, *models, test_data=processed_items)
 
-    return create_response_from_itemlist(itemlist, predictions, scores, threshold)
+    return create_response_from_itemlist(itemlist, predictions, scores, threshold, itemlist.get_qids)
 
 
 if __name__ == "__main__":
