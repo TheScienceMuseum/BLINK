@@ -76,9 +76,9 @@ def convert_item_to_blink_input(item: Item) -> dict:
         "id": item.id,
         "label": "unknown",
         "label_id": -1,
-        "context_left": item.text.split("[[")[0].lower(),
-        "mention": item.text.split("[[")[1].split("]]")[0].lower(),
-        "context_right": item.text.split("]]")[1].lower(),
+        "context_left": item.text.split("[ENT_START]")[0].lower(),
+        "mention": item.text.split("[ENT_START]")[1].split("[ENT_END]")[0].lower(),
+        "context_right": item.text.split("[ENT_END]")[1].lower(),
     }
 
 def convert_items_to_blink_inputs(items: ItemList) -> List[dict]:
