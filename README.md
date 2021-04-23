@@ -20,7 +20,7 @@ python app.py
 Requests can be made using GET or POST. The endpoint is `<base-url>:8000/blink/multiple`.
 
 **<details><summary>Example request:</summary>**
-Each `text` item is the source text, with [[double square brackets]] around the entity. BLINK doesn't need predicted entity labels.
+Each `text` item is the source text, with separators `[ENT_START]` and `[ENT_END]` around the entity. BLINK doesn't need predicted entity labels.
 
 Notes: 
 - `id` does not have to be unique. Response items *should* be returned in the same order that they were requested.
@@ -31,12 +31,12 @@ Notes:
     "items": [
                 {
                     "id": 0, 
-                    "text": "Photographs of watercolours belonging to the [[Earl of Elgin]], of the Elgin Railway (i) plate rails and transverse stone sleepers (ii) switch File of photographs belonging to Dendy Marshall marked BRIT [British] RAILWAYS  17th and 18th Century Stockton and Darlington Sundries",
+                    "text": "Photographs of watercolours belonging to the [ENT_START]Earl of Elgin[ENT_END], of the Elgin Railway (i) plate rails and transverse stone sleepers (ii) switch File of photographs belonging to Dendy Marshall marked BRIT [British] RAILWAYS  17th and 18th Century Stockton and Darlington Sundries",
                     "metadata": "optional_test_metadata"
                 },
                 {
                     "id": "values_are_converted_to_string",
-                    "text": "[[Larry J. Schaaf]], ‘Mayall, John Jabez Edwin (1813–1901)’, Oxford Dictionary of National Biography, Oxford University Press, 2004 [http://www.oxforddnb.com/view/article/52054]; Richards, L.L.& Gill, A.T., ‘The Mayall story’, History of Photography, 9 (1985), 89–107; http://www.spartacus.schoolnet.co.uk/DSmayall.htm \n  \n Born in England, Mayall started his photographic career in America, returning to London in 1847 where he set up a photographic studio. Exhibiting at the Great Exhibition of 1851, be is best known for his photographs of Queen Victoria and the Royal Family.  He became Mayor of Brighton in 1877'}",
+                    "text": "[ENT_START]Larry J. Schaaf[ENT_END], ‘Mayall, John Jabez Edwin (1813–1901)’, Oxford Dictionary of National Biography, Oxford University Press, 2004 [http://www.oxforddnb.com/view/article/52054]; Richards, L.L.& Gill, A.T., ‘The Mayall story’, History of Photography, 9 (1985), 89–107; http://www.spartacus.schoolnet.co.uk/DSmayall.htm \n  \n Born in England, Mayall started his photographic career in America, returning to London in 1847 where he set up a photographic studio. Exhibiting at the Great Exhibition of 1851, be is best known for his photographs of Queen Victoria and the Royal Family.  He became Mayor of Brighton in 1877'}",
                     "metadata": {
                         "can": "be",
                         "any": "format"
@@ -60,7 +60,7 @@ The keys of the response respond to the `id` values provided in the request.
         {
             "id": "0",
             "metadata": "test_metadata",
-            "text": "Photographs of watercolours belonging to the [[Earl of Elgin]], of the Elgin Railway (i) plate rails and transverse stone sleepers (ii) switch File of photographs belonging to Dendy Marshall marked BRIT [British] RAILWAYS  17th and 18th Century Stockton and Darlington Sundries",
+            "text": "Photographs of watercolours belonging to the [ENT_START]Earl of Elgin[ENT_END], of the Elgin Railway (i) plate rails and transverse stone sleepers (ii) switch File of photographs belonging to Dendy Marshall marked BRIT [British] RAILWAYS  17th and 18th Century Stockton and Darlington Sundries",
             "links": [
                 {
                     "title": "Earl of Elgin",
@@ -130,7 +130,7 @@ The keys of the response respond to the `id` values provided in the request.
                         "can": "be",
                         "any": "format"
                     },
-            "text": "[[Larry J. Schaaf]], ‘Mayall, John Jabez Edwin (1813–1901)’, Oxford Dictionary of National Biography, Oxford University Press, 2004 [http://www.oxforddnb.com/view/article/52054]; Richards, L.L.& Gill, A.T., ‘The Mayall story’, History of Photography, 9 (1985), 89–107; http://www.spartacus.schoolnet.co.uk/DSmayall.htm \n  \n Born in England, Mayall started his photographic career in America, returning to London in 1847 where he set up a photographic studio. Exhibiting at the Great Exhibition of 1851, be is best known for his photographs of Queen Victoria and the Royal Family.  He became Mayor of Brighton in 1877'}",
+            "text": "[ENT_START]Larry J. Schaaf[ENT_END], ‘Mayall, John Jabez Edwin (1813–1901)’, Oxford Dictionary of National Biography, Oxford University Press, 2004 [http://www.oxforddnb.com/view/article/52054]; Richards, L.L.& Gill, A.T., ‘The Mayall story’, History of Photography, 9 (1985), 89–107; http://www.spartacus.schoolnet.co.uk/DSmayall.htm \n  \n Born in England, Mayall started his photographic career in America, returning to London in 1847 where he set up a photographic studio. Exhibiting at the Great Exhibition of 1851, be is best known for his photographs of Queen Victoria and the Royal Family.  He became Mayor of Brighton in 1877'}",
             "links": [
                 {
                     "title": "Jim Schaaf",
